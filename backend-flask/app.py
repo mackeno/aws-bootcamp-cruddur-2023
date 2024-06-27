@@ -73,32 +73,29 @@ FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 
 ## Rollbar---Start
-def _get_flask_request():
-    print("Getting flask request")
-    from flask import request
-    print("request:", request)
-    return request
-rollbar._get_flask_request = _get_flask_request
+with app.app_context():
+    """init rollbar module"""
+    rollbar.init(
+        # access token
+        '2b9091e4634046ed8dd2fce67dbc351c',
+        # environment name - any string, like 'production' or 'development'
+        'flasktest',
+        # server root directory, makes tracebacks prettier
+        root=os.path.dirname(os.path.realpath(__file__)),
+        # flask already sets up logging
+        allow_logging_basic_config=False)
 
-def _build_request_data(request):
-    return rollbar._build_werkzeug_request_data(request)
-rollbar._build_request_data = _build_request_data
-## XXX end hack
+    # send exceptions from `app` to rollbar, using flask's signal system.
+    got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
 
-def init_rollbar(app):
-  rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
-  rollbar.init(
-      # access token
-      '2b9091e4634046ed8dd2fce67dbc351c',
-      # environment name
-      'production',
-      # server root directory, makes tracebacks prettier
-      root=os.path.dirname(os.path.realpath(__file__)),
-      # flask already sets up logging
-      allow_logging_basic_config=False)
-  # send exceptions from `app` to rollbar, using flask's signal system.
-  got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
-  return rollbar
+## Simple flask app
+
+@app.route('/rollbar/test2')
+def hello():
+    print("DEBUG - in hello()")
+    x = None
+    x[5]
+    return "Hello World!"
 ## Rollbar---End
 
 # XRAY
