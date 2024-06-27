@@ -1,2 +1,4 @@
-gp env HONEYCOMB_API_KEY="hcaik_01j1ba5m710jhzn68t0m2d0a0scvgt89ytxva1v6kfjcm5dqn02rgtecrh"
-export HONEYCOMB_SERVICE_NAME="Cruddur"
+FLASK_ADDRESS="https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+aws xray create-group \
+   --group-name "Cruddur" \
+   --filter-expression "service(\"backend-flask\")"
