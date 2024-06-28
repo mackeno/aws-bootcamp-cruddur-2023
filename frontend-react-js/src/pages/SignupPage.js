@@ -1,8 +1,9 @@
 import './SignupPage.css';
 import React from "react";
-import {ReactComponent as Logo} from '../components/svg/logo.svg';
+import { ReactComponent as Logo } from '../components/svg/logo.svg';
 import { Link } from "react-router-dom";
 
+// [TODO] Authenication
 import { Auth } from 'aws-amplify';
 
 export default function SignupPage() {
@@ -17,6 +18,9 @@ export default function SignupPage() {
   const onsubmit = async (event) => {
     event.preventDefault();
     setErrors('')
+    console.log('username', username)
+    console.log('email', email)
+    console.log('name', name)
     try {
       const { user } = await Auth.signUp({
         username: email,
@@ -53,7 +57,7 @@ export default function SignupPage() {
   }
 
   let el_errors;
-  if (errors){
+  if (errors) {
     el_errors = <div className='errors'>{errors}</div>;
   }
 
@@ -63,7 +67,7 @@ export default function SignupPage() {
         <Logo className='logo' />
       </div>
       <div className='signup-wrapper'>
-        <form 
+        <form
           className='signup_form'
           onSubmit={onsubmit}
         >
@@ -74,7 +78,7 @@ export default function SignupPage() {
               <input
                 type="text"
                 value={name}
-                onChange={name_onchange} 
+                onChange={name_onchange}
               />
             </div>
 
@@ -83,7 +87,7 @@ export default function SignupPage() {
               <input
                 type="text"
                 value={email}
-                onChange={email_onchange} 
+                onChange={email_onchange}
               />
             </div>
 
@@ -92,7 +96,7 @@ export default function SignupPage() {
               <input
                 type="text"
                 value={username}
-                onChange={username_onchange} 
+                onChange={username_onchange}
               />
             </div>
 
@@ -101,7 +105,7 @@ export default function SignupPage() {
               <input
                 type="password"
                 value={password}
-                onChange={password_onchange} 
+                onChange={password_onchange}
               />
             </div>
           </div>
